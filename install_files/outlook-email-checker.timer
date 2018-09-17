@@ -3,6 +3,7 @@ Description=Checks for new emails each minute
 
 [Timer]
 OnUnitActiveSec=1min 
+Persistent=true
 
 [Install]
 WantedBy=timers.target
