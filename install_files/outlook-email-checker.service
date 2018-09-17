@@ -1,0 +1,9 @@
+[Unit]
+Description=Check for new emails on outlook email
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/outlook-email-checker
+
+[Install]
+WantedBy=multi-user.target

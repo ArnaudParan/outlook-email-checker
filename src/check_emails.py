@@ -38,7 +38,7 @@ def get_recieved_emails(user_id,
     retrieve_time = datetime.now(timezone.utc)
     if not first_download:
         mail_args["filter"] += "ReceivedDateTime ge {0}".format(str(last_download_time).replace(" ", "T"))
-        if len(last_email_ids) != 0:
+        if len(last_emails_ids) != 0:
             mail_args["filter"] += " and id ne "
             mail_args["filter"] += " and id ne ".join(last_email_ids)
     else:
@@ -78,8 +78,8 @@ if __name__ == "__main__":
     tenant = config["auth"]["tenant"]
     redirect_uri = config["auth"]["redirect_uri"]
     auth_filename = config["auth"]["filename"]
-    last_data_path = config["config"]["last_data"]
-    hook_dir = config["config"]["hook"]
+    last_data_path = os.path.expanduser(config["config"]["last_data"])
+    hook_dir = os.path.expanduser(config["config"]["hook"])
 
     if os.path.isfile(last_data_path):
         first_download = False
@@ -104,6 +104,8 @@ if __name__ == "__main__":
                                                       first_download,
                                                       last_download_time,
                                                       last_emails_ids)
+    if not os.path.isdir(os.path.dirname(last_data_path)):
+        os.makedirs(os.path.dirname(last_data_path))
     with open(last_data_path, 'w') as f:
-        f.write(json.dumps({"last_download_time": retrieve_time, "last_emails_ids": recieved_ids}))
+        f.write(json.dumps({"last_download_time": str(retrieve_time), "last_emails_ids": recieved_ids}))
     subprocess.run([os.path.join(hook_dir, "email_received")] + recieved_ids)
