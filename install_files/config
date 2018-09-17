@@ -1,0 +1,14 @@
+[config]
+hook=~/.local/share/outlook-email-checker/hook/
+last_data=~/.local/share/outlook-email-checker/last_data.json
+user_id=me
+folder_id=Inbox
+filter=
+
+[auth]
+client_id=
+private_key=
+scope=
+tenant=
+redirect_uri=
+filename=outlook-email-checker.json

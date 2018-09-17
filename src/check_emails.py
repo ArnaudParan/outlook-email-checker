@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import subprocess
 import configparser
 import json
@@ -78,13 +79,13 @@ if __name__ == "__main__":
     redirect_uri = config["auth"]["redirect_uri"]
     auth_filename = config["auth"]["filename"]
     last_data_path = config["config"]["last_data"]
-    hook_dir = conig["config"]["hook"]
+    hook_dir = config["config"]["hook"]
 
     if os.path.isfile(last_data_path):
         first_download = False
         with open(last_data_path, 'r') as f:
             dat = json.load(f)
-        last_download_time = dat["last_download_time"]
+        last_download_time = datetime.strptime(dat["last_download_time"], "%Y-%m-%d %H:%M:%S.%f%z")
         last_emails_ids = dat["last_emails_ids"]
     else:
         first_download = True
@@ -105,4 +106,4 @@ if __name__ == "__main__":
                                                       last_emails_ids)
     with open(last_data_path, 'w') as f:
         f.write(json.dumps({"last_download_time": retrieve_time, "last_emails_ids": recieved_ids}))
-    subprocess.run(os.path.join(hook_dir, "email_received"))
+    subprocess.run([os.path.join(hook_dir, "email_received")] + recieved_ids)
