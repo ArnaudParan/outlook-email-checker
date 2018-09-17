@@ -38,15 +38,12 @@ def get_recieved_emails(user_id,
     retrieve_time = datetime.now(timezone.utc)
     if not first_download:
         mail_args["filter"] += "ReceivedDateTime ge {0}".format(str(last_download_time).replace(" ", "T"))
-        if len(last_emails_ids) != 0:
-            mail_args["filter"] += " and id ne "
-            mail_args["filter"] += " and id ne ".join(last_emails_ids)
     else:
         mail_args["filter"] += "ReceivedDateTime ge {0}".format(str(retrieve_time).replace(" ", "T"))
 
     recieved_ids = []
     for emails in get_all_emails_it(auth, user_id, folder_id, **mail_args):
-        recieved_ids += [mail["id"] for mail in emails]
+        recieved_ids += [mail["id"] for mail in emails if mail["id"] not in last_emails_ids]
 
     return retrieve_time, recieved_ids
 
@@ -108,4 +105,5 @@ if __name__ == "__main__":
         os.makedirs(os.path.dirname(last_data_path))
     with open(last_data_path, 'w') as f:
         f.write(json.dumps({"last_download_time": str(retrieve_time), "last_emails_ids": recieved_ids}))
-    subprocess.run([os.path.join(hook_dir, "email_received")] + recieved_ids)
+    if len(recieved_ids) != 0:
+        subprocess.run([os.path.join(hook_dir, "email_received")] + recieved_ids)
