@@ -4,6 +4,7 @@ Description=Checks for new emails each minute
 [Timer]
 OnUnitActiveSec=1min 
 Persistent=true
+Accuracysec=1sec
 
 [Install]
 WantedBy=timers.target
