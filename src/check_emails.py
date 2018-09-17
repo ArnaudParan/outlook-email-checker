@@ -40,7 +40,7 @@ def get_recieved_emails(user_id,
         mail_args["filter"] += "ReceivedDateTime ge {0}".format(str(last_download_time).replace(" ", "T"))
         if len(last_emails_ids) != 0:
             mail_args["filter"] += " and id ne "
-            mail_args["filter"] += " and id ne ".join(last_email_ids)
+            mail_args["filter"] += " and id ne ".join(last_emails_ids)
     else:
         mail_args["filter"] += "ReceivedDateTime ge {0}".format(str(retrieve_time).replace(" ", "T"))
 

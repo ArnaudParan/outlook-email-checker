@@ -4,7 +4,7 @@ Description=Checks for new emails each minute
 [Timer]
 OnCalendar=*:0/1
 Persistent=true
-Accuracysec=30sec
+AccuracySec=30sec
 
 [Install]
 WantedBy=timers.target
